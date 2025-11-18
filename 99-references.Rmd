@@ -1,0 +1,19 @@
+# References and Further Reading
+
+## Books and Papers
+
+*   **Deep Learning with Python** by François Chollet (Creator of Keras). A must-read.
+*   **Kelley et al. (2016).** "Basset: learning the regulatory code of the accessible genome with deep convolutional neural networks." *Nature Methods*.
+*   **Ji et al. (2021).** "DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome." *Bioinformatics*.
+
+## Online Courses
+
+*   **Prof. Andrew Ng's Deep Learning Specialization on Coursera.**
+*   **Fast.ai:** *Practical Deep Learning for Coders*.
+
+## Useful Links
+
+*   Keras: [https://keras.io/](https://keras.io/)
+*   KerasHub: [https://keras.io/keras_cv/](https://keras.io/keras_cv/) (for pre-trained computer vision models)
+*   Hugging Face: [https://huggingface.co/](https://huggingface.co/) (for Transformers models like DNABERT)
+*   Bioconductor: [https://bioconductor.org/](https://bioconductor.org/)

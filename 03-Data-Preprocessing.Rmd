@@ -1,0 +1,77 @@
+# Data Preprocessing for Bioinformatics
+
+Neural networks require data to be in a numerical, normalized format. Biological data often requires special encoding.
+
+## Encoding Categorical Data
+
+### One-Hot Encoding for DNA Sequences
+
+This is the most common method for representing sequences. Each nucleotide is converted into a vector.
+
+*   A -> `[1, 0, 0, 0]`
+*   T -> `[0, 1, 0, 0]`
+*   C -> `[0, 0, 1, 0]`
+*   G -> `[0, 0, 0, 1]`
+*   N -> `[0, 0, 0, 0]`
+
+A sequence `"ATCG"` becomes a 2D array of shape `(4, 4)`.
+
+```python
+import numpy as np
+
+def one_hot_encode_dna(sequence):
+    """One-hot encode a DNA sequence."""
+    mapping = {'A': [1,0,0,0], 'T': [0,1,0,0], 'C': [0,0,1,0], 'G': [0,0,0,1]}
+    one_hot = []
+    for base in sequence:
+        one_hot.append(mapping.get(base, [0,0,0,0])) # Handle 'N' or other chars
+    return np.array(one_hot)
+
+# Example
+seq = "ATCGN"
+encoded_seq = one_hot_encode_dna(seq)
+print(f"Sequence: {seq}")
+print(f"Encoded shape: {encoded_seq.shape}")
+print(encoded_seq)
+```
+
+## Handling Variable-Length Sequences
+
+For sequences of different lengths, we use **padding**. We choose a maximum length and pad shorter sequences with zeros.
+
+```python
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+# Assume `list_of_encoded_sequences` is a list of one-hot encoded sequences
+padded_sequences = pad_sequences(list_of_encoded_sequences, maxlen=200, padding='post', dtype='float32')
+print(f"Padded sequences shape: {padded_sequences.shape}") # (num_samples, 200, 4)
+```
+
+## Data Generators
+
+For large datasets that don't fit in memory, we use `tf.data.Dataset` or Keras' `ImageDataGenerator` to stream data from disk in batches.
+
+```python
+# Example for reading from text files
+def file_data_generator(file_paths, labels, batch_size=32):
+    num_samples = len(file_paths)
+    while True: # Loop forever so the generator never terminates
+        for offset in range(0, num_samples, batch_size):
+            batch_paths = file_paths[offset:offset+batch_size]
+            batch_labels = labels[offset:offset+batch_size]
+
+            batch_sequences = []
+            for path in batch_paths:
+                with open(path, 'r') as f:
+                    seq = f.read().strip()
+                encoded_seq = one_hot_encode_dna(seq)
+                batch_sequences.append(encoded_seq)
+
+            # Pad the sequences in the batch
+            batch_x = pad_sequences(batch_sequences, maxlen=200, padding='post')
+            yield batch_x, batch_labels
+
+# Usage
+# train_generator = file_data_generator(train_files, train_labels)
+# model.fit(train_generator, epochs=10, steps_per_epoch=len(train_files)//batch_size)
+```

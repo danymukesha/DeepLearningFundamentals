@@ -1,0 +1,44 @@
+---
+title: "Introduction to Deep Learning for Bioinformatics"
+author: "Dany Mukesha"
+date: "January 8-9, 2025"
+site: bookdown::bookdown_site
+documentclass: book
+description: >
+    "Deep Learning fundamentals and their application in bioinformatics,
+    using Keras."
+cover-image: assets/images/cover.png
+url: 'https\://danyukeshagithub.io/DeepLearningFundamentals/'
+github-repo: 'danymukesha/DeepLearningFundamentals'
+---
+
+# Welcome {.unnumbered}
+
+This book contains the complete training materials for the **"Introduction to Deep Learning"** course.
+
+**Date:** December 8th & 9th, 2025
+**Location:** Chur (Remotely)
+
+## Course Overview
+
+In the first part of the course, we will cover the fundamental concepts and applications of deep learning, including model architectures, training procedures, and data preprocessing. In the second part, the focus will shift to applying deep learning models to bioinformatics tasks, using both custom-built and pre-trained models.
+
+### Learning Goals
+
+*   Getting an overview of the topic 'Deep Learning' (with bioinformatic examples).
+*   How to implement and train a neural network using Keras.
+*   Data preprocessing and encoding for neural network models.
+*   Large Language Models (LLMs) and pre-trained models and how they can be applied to various tasks.
+
+### Prerequisites
+
+*   Basic bioinformatics knowledge.
+*   Good knowledge of Python and the Linux Terminal.
+
+### Setup Instructions
+
+Please follow the instructions in the [README.md](https://github.com/danymukesha/DeepLearningFundamentals/blob/main/README.md) file on the course's GitHub repository to set up your environment *before* the course begins.
+
+
+***
+![CC BY 4.0](https://i.creativecommons.org/l/by/4.0/88x31.png) This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).

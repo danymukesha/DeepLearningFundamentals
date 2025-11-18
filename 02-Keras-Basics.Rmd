@@ -1,0 +1,79 @@
+# Implementing Neural Networks with Keras
+
+## What is Keras?
+
+Keras is a high-level neural networks API, written in Python and capable of running on top of TensorFlow, JAX, or PyTorch. It was developed with a focus on enabling fast experimentation.
+
+## Your First Neural Network
+
+Let's build a simple model to classify handwritten digits from the classic MNIST dataset. This is the "Hello, World!" of deep learning.
+
+```python
+# First, we import the necessary modules from Keras
+from tensorflow import keras
+from tensorflow.keras import layers
+
+# Load the MNIST dataset
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+# Preprocess the data: normalize pixel values to [0, 1] and flatten the 28x28 images
+x_train = x_train.astype("float32") / 255.0
+x_test = x_test.astype("float32") / 255.0
+x_train = x_train.reshape(-1, 784) # 28*28 = 784
+x_test = x_test.reshape(-1, 784)
+
+# Build the model architecture
+model = keras.Sequential([
+    layers.Dense(128, activation='relu', input_shape=(784,)), # Input layer
+    layers.Dense(64, activation='relu'),                     # Hidden layer
+    layers.Dense(10, activation='softmax')                   # Output layer (10 classes)
+])
+
+# Compile the model
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Let's see the architecture
+model.summary()
+```
+
+## Model Anatomy
+
+1.  **`Sequential` Model:** A linear stack of layers.
+2.  **`Dense` Layer:** A fully connected layer where each neuron is connected to every neuron in the previous layer.
+3.  **Activation Functions:**
+    *   `relu` (Rectified Linear Unit): Great for hidden layers. It helps with the vanishing gradient problem.
+    *   `softmax`: Used in the output layer for multi-class classification. It outputs a probability distribution over the classes.
+4.  **Compilation:**
+    *   **Optimizer:** How the model updates its weights based on the loss. `adam` is a good default.
+    *   **Loss Function:** The objective that the model tries to minimize. `sparse_categorical_crossentropy` is for integer labels.
+    *   **Metrics:** What to monitor during training, like `accuracy`.
+
+## Training the Model
+
+```python
+# Train the model for 10 epochs (passes over the training data)
+history = model.fit(
+    x_train, y_train,
+    batch_size=32,
+    epochs=10,
+    validation_data=(x_test, y_test) # Use test set for validation
+)
+```
+
+## Evaluating the Model
+
+```python
+# Evaluate on the test set
+test_loss, test_accuracy = model.evaluate(x_test, y_test, verbose=2)
+print(f"\nTest accuracy: {test_accuracy:.4f}")
+```
+
+## Exercise
+
+1.  Run the code above. What is the final test accuracy?
+2.  Try changing the number of neurons in the hidden layers (e.g., 256, 512). How does it affect the training time and accuracy?
+3.  Try adding a third hidden layer. Does it improve performance?

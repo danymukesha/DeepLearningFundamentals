@@ -1,0 +1,62 @@
+# Large Language Models in Bioinformatics
+
+## From Word Embeddings to Biological Embeddings
+
+Large Language Models (LLMs) like BERT and GPT work by learning deep contextual representations of words. We can apply the same principle to biological "words".
+
+*   **Word -> k-mer:** A short biological sequence (e.g., a 3-6 amino acid peptide or a 3-6 nucleotide k-mer).
+*   **Sentence -> Protein/DNA sequence:** The entire sequence is a sentence made of k-mer words.
+
+## Pre-trained Models: ProtBERT and DNABERT
+
+Researchers have trained BERT-like models on massive corpora of protein sequences or DNA, creating powerful, general-purpose feature extractors for biology.
+
+*   **ProtBERT:** Trained on millions of protein sequences from UniProt.
+*   **DNABERT:** Trained on genomes from humans and other species.
+
+## How to Use a Pre-trained Model
+
+The typical workflow is **transfer learning**:
+
+1.  **Feature Extraction:** Use the pre-trained model to convert your raw sequences into high-quality numerical features (embeddings). Then, train a simple classifier (e.g., SVM, Logistic Regression) on these features.
+2.  **Fine-tuning:** Start with the pre-trained model and continue training it on your specific, smaller dataset. This adapts the model's knowledge to your task.
+
+### Example: Using DNABERT for Promoter Prediction
+
+We will use the `transformers` library by Hugging Face.
+
+```python
+# First, install the library: pip install transformers
+from transformers import AutoTokenizer, AutoModel
+import torch
+
+# Load the pre-trained DNABERT model and tokenizer
+model_name = "zhihan1996/DNABERT-2-117M"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModel.from_pretrained(model_name)
+
+# Tokenize a DNA sequence
+sequence = "ATCGATCGATCGATCG"
+inputs = tokenizer(sequence, return_tensors="pt") # pt for PyTorch tensors
+
+# Get the model's embeddings
+with torch.no_grad():
+    outputs = model(**inputs)
+    embeddings = outputs.last_hidden_state # This is the contextual embedding for each token
+
+# The [CLS] token's embedding is often used as a representation of the whole sequence
+whole_sequence_embedding = embeddings[0, 0, :]
+
+print(f"Shape of sequence embeddings: {embeddings.shape}")
+print(f"Shape of whole sequence embedding: {whole_sequence_embedding.shape}")
+```
+
+You can now use `whole_sequence_embedding` as input to a classifier for your task (e.g., promoter vs. non-promoter).
+
+## Potential Applications
+
+*   **Variant Effect Prediction:** Feed the reference and alternate allele sequences to a model and see how the embedding changes.
+*   **Protein Function Prediction:** Use ProtBERT embeddings to predict Gene Ontology terms.
+*   **Structure Prediction:** Embeddings can be used as inputs to predict secondary structure.
+
+> **Note:** Fine-tuning these models requires significant computational resources (GPUs). For this course, we focus on feature extraction.

@@ -1,0 +1,17 @@
+book_filename: "Intro_Deep_Learning_Bioinformatics"
+chapter_name: "Chapter "
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "
+output_dir: "_book"
+rmd_files: [
+  "index.Rmd",
+  "01-Introduction.Rmd",
+  "02-Keras-Basics.Rmd",
+  "03-Data-Preprocessing.Rmd",
+  "04-CNN-Genomics.Rmd",
+  "05-LLMs-Bioinformatics.Rmd",
+  "06-Advanced-Topics.Rmd",
+  "99-References.Rmd"
+]

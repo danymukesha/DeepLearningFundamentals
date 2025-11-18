@@ -1,0 +1,61 @@
+# Advanced Topics & Best Practices
+
+## Regularization: Fighting Overfitting
+
+When your model performs well on training data but poorly on validation data, it's overfitting. Here’s how to combat it:
+
+*   **Dropout:** Randomly "drop out" (set to zero) a fraction of neurons during training. This prevents the network from becoming too reliant on any single neuron.
+
+    ```python
+    model.add(layers.Dropout(0.5)) # Drop 50% of neurons
+    ```
+
+*   **L1/L2 Regularization:** Add a penalty to the loss function for large weights, encouraging simpler models.
+
+    ```python
+    from tensorflow.keras import regularizers
+    model.add(layers.Dense(64, activation='relu',
+                          kernel_regularizer=regularizers.l2(0.01)))
+    ```
+
+## Hyperparameter Tuning
+
+The choice of hyperparameters (learning rate, number of layers, dropout rate, etc.) is crucial. Use `KerasTuner` to automate the search.
+
+```python
+!pip install keras-tuner
+import kerastuner as kt
+
+def build_model(hp):
+    model = keras.Sequential()
+    model.add(layers.Flatten(input_shape=(784,)))
+    # Tune the number of units in the first Dense layer
+    hp_units = hp.Int('units', min_value=32, max_value=512, step=32)
+    model.add(layers.Dense(units=hp_units, activation='relu'))
+    model.add(layers.Dropout(0.5))
+    model.add(layers.Dense(10, activation='softmax'))
+
+    # Tune the learning rate
+    hp_learning_rate = hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4])
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=hp_learning_rate),
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
+    return model
+
+tuner = kt.RandomSearch(build_model, objective='val_accuracy', max_trials=10)
+tuner.search(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
+best_model = tuner.get_best_models()[0]
+```
+
+## Interpretability: What Did My Model Learn?
+
+Understanding *why* a model makes a prediction is critical in science.
+
+*   **Saliency Maps:** Compute the gradient of the output with respect to the input. This tells you which input positions (e.g., which nucleotides) were most important for the prediction.
+*   **SHAP:** A unified framework for interpreting model predictions.
+
+## Resources for the Future
+
+*   **Keras Documentation & Guides:** The best resource. [https://keras.io/](https://keras.io/)
+*   **Bioconductor for R Users:** The `torch` and `tfestimators` packages provide interfaces to deep learning frameworks in R.
+*   **Community:** Stay engaged with the Bioconductor and BioDL communities on Slack, GitHub, and at conferences.

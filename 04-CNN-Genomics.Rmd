@@ -1,0 +1,54 @@
+# Convolutional Neural Networks for Genomics
+
+Convolutional Neural Networks (CNNs) are not just for images. They are excellent at finding local, translation-invariant patterns, which makes them perfect for finding motifs in DNA sequences.
+
+## The Convolutional Layer
+
+A filter (or kernel) slides over the input sequence, computing a dot product at each position. A filter that recognizes the "TATA" box motif will have a high activation when it slides over a "TATA" sequence.
+
+```python
+from tensorflow.keras import layers, models
+
+# Assume input is a one-hot encoded sequence of length 200 -> shape (200, 4)
+# We add a channel dimension: (200, 4, 1) to treat it like a 1D "image"
+input_seq = layers.Input(shape=(200, 4))
+
+# Reshape to add a channel dimension
+x = layers.Reshape((200, 4, 1))(input_seq)
+
+# First 1D Convolutional Layer
+x = layers.Conv2D(filters=32, kernel_size=(10, 4), activation='relu', padding='same')(x)
+# kernel_size=(10,4) means the filter is 10bp long and 4 nucleotides wide.
+# It can learn a motif of up to 10bp.
+
+x = layers.MaxPooling2D(pool_size=(2, 1))(x) # Reduce sequence length by half
+
+# Second Convolutional Layer
+x = layers.Conv2D(filters=64, kernel_size=(5, 1), activation='relu')(x)
+x = layers.MaxPooling2D(pool_size=(2, 1))(x)
+
+# Flatten and add Dense layers for classification
+x = layers.Flatten()(x)
+x = layers.Dense(128, activation='relu')(x)
+output = layers.Dense(1, activation='sigmoid')(x) # Binary classification
+
+model = models.Model(inputs=input_seq, outputs=output)
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.summary()
+```
+
+## Case Study: Basset
+
+Basset is a famous CNN architecture for predicting DNA accessibility from sequence [[Kelley et al., 2016](https://www.nature.com/articles/nmeth.3547)].
+
+Its key features:
+*   Multiple convolutional layers to learn hierarchical features (short motifs -> combinations of motifs).
+*   Multi-task learning: Predicts accessibility across hundreds of cell types simultaneously.
+*   This improves generalization because the model learns features that are relevant across many tasks.
+
+## Exercise: Build a TF Binding Predictor
+
+1.  Use the data from the [DeepBind project](http://tools.genes.toronto.edu/deepbind/).
+2.  One-hot encode the provided DNA sequences.
+3.  Build and train a CNN model similar to the one above.
+4.  Try to visualize the first-layer filters to see if they have learned known TF motifs.
