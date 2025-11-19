@@ -2,35 +2,45 @@
 
 ## What is Deep Learning?
 
-Deep Learning (DL) is a subfield of machine learning based on artificial neural networks. The "deep" refers to the number of layers through which the data is transformed. While a standard neural network might have 2-3 layers, a deep network can have dozens or hundreds.
+Deep Learning (DL) is a subfield of machine learning based on artificial
+neural networks. The "deep" refers to the number of layers through 
+which the data is transformed. While a standard neural network might
+have 2-3 layers, a deep network can have dozens or hundreds.
 
 ### Key Concepts
 
-*   **Neuron:** The basic computational unit. It takes inputs, multiplies them by weights, adds a bias, and passes the result through an activation function.
-*   **Layer:** A collection of neurons.
-*   **Input Layer:** The layer that receives the raw data.
-*   **Hidden Layer(s):** The layers between input and output where the "learning" happens.
-*   **Output Layer:** The final layer that produces the prediction.
-*   **Activation Function:** A function that determines the output of a neuron (e.g., ReLU, Sigmoid, Softmax).
+-   **Neuron:** The basic computational unit. It takes inputs, 
+    multiplies them by weights, adds a bias, and passes the result 
+    through an activation function.
+-   **Layer:** A collection of neurons.
+-   **Input Layer:** The layer that receives the raw data.
+-   **Hidden Layer(s):** The layers between input and output where 
+    the "learning" happens.
+-   **Output Layer:** The final layer that produces the prediction.
+-   **Activation Function:** A function that determines the output 
+    of a neuron (e.g., ReLU, Sigmoid, Softmax).
 
 ## Why Deep Learning in Bioinformatics?
 
 Bioinformatics data is often high-dimensional and complex, making it a perfect candidate for DL.
 
-*   **Genomics:** Predicting the functional effect of non-coding variants, chromatin accessibility, and transcription factor binding.
-*   **Proteomics:** Predicting protein structure (e.g., AlphaFold), function, and interactions.
-*   **Medical Imaging:** Classifying tumors from histopathology images or MRI scans.
-*   **Drug Discovery:** Predicting molecular properties and drug-target interactions.
+Some examples:
+
+-   **Genomics:** Predicting the functional effect of non-coding variants, chromatin accessibility, and transcription factor binding.
+-   **Proteomics:** Predicting protein structure (e.g., AlphaFold), function, and interactions.
+-   **Medical Imaging:** Classifying tumors from histopathology images or MRI scans.
+-   **Drug Discovery:** Predicting molecular properties and drug-target interactions.
 
 ## A Simple Biological Example: Transcription Factor Binding Prediction
 
 Imagine we have DNA sequences of length 100bp. Our goal is to predict whether a specific transcription factor (TF) binds to a given sequence.
 
-*   **Input:** `"ATCGATCGAT..."` (100 characters)
-*   **Output:** `1` (binds) or `0` (does not bind)
+-   **Input:** `"ATCGATCGAT..."` (100 characters)
+-   **Output:** `1` (binds) or `0` (does not bind)
 
-We need to:
-1.  Convert the sequence into a numerical format (more on this in Chapter 3).
-2.  Design a neural network that can learn the binding motif and its context.
+We need to: 
+
+1. Convert the sequence into a numerical format (more on this in Chapter 3). 
+2. Design a neural network that can learn the binding motif and its context.
 
 In the following chapters, we will learn how to build such a model step-by-step.

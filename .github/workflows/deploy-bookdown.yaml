@@ -1,0 +1,80 @@
+name: Deploy Bookdown to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write  # this is Required for pushing to gh-pages
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Set up Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libcurl4-openssl-dev
+          sudo apt-get install libfontconfig1-dev
+          sudo apt-get install libharfbuzz-dev libfribidi-dev
+          sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+      
+      - name: Install system dependencies for R plotting packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcairo2-dev \
+            libfreetype6-dev \
+            libfontconfig1-dev \
+            libpng-dev \
+            pkg-config
+
+      #- name: Cache R packages
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: ~/.cache/R
+      #    key: ${{ runner.os }}-r-${{ hashFiles('**/*.R') }}
+
+      - name: Install R and Bioconductor packages
+        run: |
+          Rscript -e '
+            options(repos = c(CRAN = "https://cloud.r-project.org"))
+            install.packages(c(
+              "bookdown", "rmarkdown", "knitr", "pheatmap", "ggplot2", "downlit", "xml2",
+              "reshape2", "gridExtra", "tidyverse", "lme4",
+              "ggforce", "scatterpie", "png", ## not necessary for the day1
+              "gdtools", "ggiraph", "ggtree", # for  clusterProfiler
+              "readxl", "ggrepel", "viridis"
+            ))
+            if (!requireNamespace("BiocManager", quietly = TRUE))
+              install.packages("BiocManager")
+            BiocManager::install(c(
+              "limma", "vsn",
+              "sva", "clusterProfiler", "org.Hs.eg.db", "lme4", ## not necessary for the day1
+              "KEGGREST", "AnnotationDbi", "annotate", "GO.db",
+              "genefilter", "GOSemSim", "DOSE", "enrichplot", "GEOquery"
+            ), update = TRUE, ask = FALSE)'
+
+      - uses: actions/checkout@v4
+        
+      - name: Print R session info
+        run: Rscript -e 'sessionInfo()'
+
+      - name: Build the book
+        run: Rscript -e 'bookdown::render_book("index.Rmd", output_dir = "_book")'
+
+      - name: Deploy to GitHub Pages (gh-pages branch)
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages        # targeting the branch for Pages
+          folder: _book           # bookdown output folder
