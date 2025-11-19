@@ -29,6 +29,13 @@ jobs:
           sudo apt-get install libharfbuzz-dev libfribidi-dev
           sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
+      - name: Install R and Bioconductor packages
+        run: |
+          Rscript -e '
+            options(repos = c(CRAN = "https://cloud.r-project.org"))
+            install.packages(c(
+              "bookdown", "rmarkdown", "knitr"
+            ))
       - uses: actions/checkout@v4
         
       - name: Print R session info
