@@ -35,7 +35,7 @@ jobs:
             options(repos = c(CRAN = "https://cloud.r-project.org"))
             install.packages(c(
               "bookdown", "rmarkdown", "knitr"
-            ))
+            ))'
       - uses: actions/checkout@v4
         
       - name: Print R session info
@@ -48,4 +48,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages        # targeting the branch for Pages
+
           folder: _book           # bookdown output folder
